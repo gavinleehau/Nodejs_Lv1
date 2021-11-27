@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include ./../../html/head %>
+</head>
+<%- locals.flash %>
+<% 
+    var collection = 'item-list';
+    var formCollection = 'item-form';
+    var linkprefixAdmin = systemConfig.prefixAdmin + `/${collection}/`;
+    var linkEditForm = systemConfig.prefixAdmin + `/${formCollection}/`;
+%>
+
+<body class="hold-transition sidebar-mini layout-fixed text-sm">
+    <div class="wrapper">
+        <!-- <h3><%= JSON.stringify(items) %> </h3> -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Search & Filter -->
+                <div class="card card-info card-outline">
+                    <div class="card-header">
+                        <h6 class="card-title">Search & Filter</h6>
+                        <div class="card-tools">
+                            <a href="<%= linkprefixAdmin %>" class="btn btn-tool"><i class="fas fa-sync"></i></a>
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-between">
+                            <div class="mb-1">
+                                <% include ./../../helpers/filter-status %>
+                                <%- filterStatusHelper(collection, statusFillter, keyword) %>
+                            </div>
+                            <div class="mb-1">
+                                <select id="filter_groupacp" name="filter_groupacp" class="custom-select custom-select-sm mr-1" style="width: unset">
+                                    <option value="default" selected="">- Select Group ACP -</option>
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                            </div>
+                            <div class="mb-1">
+                                <form action="<%= linkprefixAdmin%><%= currentStatus %>" method="GET">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control form-control-sm" name="keyword" value="<%= keyword %>" style="min-width: 300px">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-sm btn-info" id="btn-search">Search</button>
+                                            <button type="button" class="btn btn-sm btn-danger" id="btn-clear-search"><a style="color: white;"href="<%= linkprefixAdmin%><%= currentStatus %>">Clear</a></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- END search -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List -->
+                <div class="card card-info card-outline">
+                    <div class="card-header">
+                        <h4 class="card-title">List</h4>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fas fa-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- List Content -->
+                        <form method="POST" class="table-responsive" action="" id="zt-form">
+                            <% include ./../../helpers/action %>
+                            <%- actionHelper(collection) %>
+                            <table class="table table-bordered table-hover text-nowrap btn-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input cbAll" type="checkbox" id="check-all">
+                                                <label for="check-all" class="custom-control-label"></label>
+                                            </div>
+                                        </th>
+                                        <th class="text-center">ID</th>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Status</th>
+                                        <!-- <th class="text-center">Group ACP</th> -->
+                                        <!-- <th class="text-center">Created</th> -->
+                                        <th class="text-center">Ordering</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%  include ./../../helpers/status %>
+                                    <%  include ./../../helpers/highlight %>
+                                    <%  items.forEach( (item, index) => { %>
+                                        <tr>
+                                            <td class="text-center">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input" type="checkbox" id="checkbox-<%= item.id %>" name="cid" value="<%= item.id %>">
+                                                    <label for="checkbox-<%= item.id %>" class="custom-control-label"></label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center"><%= index+1 %></td>
+                                            <td class="text-center"><%- highlightHelper(item.name, keyword) %></td>
+                                            <td class="text-center position-relative"><%- statusHelper(collection, item.status, item.id) %></td>
+                                            
+                                            <!-- <td class="text-center position-relative"><a href="#" class="my-btn-state rounded-circle btn btn-sm btn-success"><i class="fas fa-check"></i></a></td> -->
+                                            <!-- <td class="text-center position-relative"><a href="#" class="my-btn-state rounded-circle btn btn-sm btn-success"><i class="fas fa-check"></i></a></td> -->
+                                            <!-- <td class="text-center">
+                                                <p class="mb-0 history-by"><i class="far fa-user"></i></p>
+                                                <p class="mb-0 history-time"><i class="far fa-clock"></i></p>
+                                            </td> -->
+                                            <!-- <td class="text-center modified-1">
+                                                <p class="mb-0 history-by"><i class="far fa-user"></i></p>
+                                                <p class="mb-0 history-time"><i class="far fa-clock"></i></p>
+                                            </td> -->
+                                            <td class="text-center position-relative"><input type="number" value="<%= item.ordering %>" class="text-center ordering"></td>
+                                            <td class="text-center">
+                                                <a href="<%= linkEditForm %><%=item.id %>" class="rounded-circle btn btn-sm btn-info" title="Edit">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
+
+                                                <a href="javascript:deleteItem('<%= linkprefixAdmin %>delete/<%=item.id %>')" class="rounded-circle btn btn-sm btn-danger" title="Delete">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                            <div>
+                                <input type="hidden" name="sort_field" value="">
+                                <input type="hidden" name="sort_order" value="">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer clearfix">
+                        <% include ./../../helpers/pagination %>
+                        <%- PaginationHelpers(pagination, collection, currentStatus, keyword) %>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- script -->
+    <% include ./../../html/script %>
+</body>
+
+</html> 

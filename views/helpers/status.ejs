@@ -1,0 +1,16 @@
+
+<% statusHelper = (collection, status, id) =>{ 
+    let xhtmlStatus = '';
+    let link = systemConfig.prefixAdmin + '/' + collection + '/change-status/' + id + '/' + status;
+        if (status == 'active') { 
+            xhtmlStatus = `<span class="my-btn-state rounded-circle btn btn-sm btn-success"><i class="fas fa-check"></i></span>`;
+        } else if (status == 'inactive') {
+            xhtmlStatus = `<span class="my-btn-state rounded-circle btn btn-sm btn-danger"><i class="fas fa-minus"></i></span> `;
+        }
+
+    return `<a href="${link}"> ${xhtmlStatus} </a>` 
+} %>
+
+
+
+

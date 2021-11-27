@@ -1,0 +1,20 @@
+
+
+
+<% filterStatusHelper = (collection, statusFillter, keyword) =>{
+    let xhtmlResult = '';
+    statusFillter.forEach((item) => {
+        let link = systemConfig.prefixAdmin + '/'+ collection +'/' + item.value;
+        if (keyword !== '' && keyword !== undefined) link += '?keyword=' + keyword;
+
+        xhtmlResult += `<a class="mr-1 btn btn-sm btn-${item.class} btn-sm" href="/${link}"> ${item.name.toUpperCase() + "(" +  item.count + ")"} </a>`;    
+    })
+    return xhtmlResult;
+} %>
+
+
+<!-- <div class="mb-1">
+    <a href="#" class="mr-1 btn btn-sm btn-info">All <span class="badge badge-pill badge-light">15</span></a>
+    <a href="#" class="mr-1 btn btn-sm btn-secondary">Active <span class="badge badge-pill badge-light">7</span></a>
+    <a href="#" class="mr-1 btn btn-sm btn-secondary">Inactive <span class="badge badge-pill badge-light">8</span></a>
+</div> -->

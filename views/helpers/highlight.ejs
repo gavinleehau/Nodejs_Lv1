@@ -1,0 +1,8 @@
+<%
+	highlightHelper = (name, search) => {
+		if(search.length > 0) return name.replace(new RegExp(search, "ig"), (searchResult) => { // i: ko phân biệt hoa thường, g: tìm trên toàn chuỗi
+			return `<span class='highlight'>${searchResult}</span>`
+		});
+		return name;
+	}
+%>
